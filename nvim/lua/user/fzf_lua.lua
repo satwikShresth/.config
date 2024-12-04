@@ -8,7 +8,7 @@ function M.config()
   fzfLua.setup {
     fzf_bin = 'fzf-tmux',
     fzf_opts = { ['--border'] = 'rounded' },
-    fzf_tmux_opts = { ['-p'] = '50%,65%' },
+    fzf_tmux_opts = { ['-p'] = '90%,85%' },
     winopts = { preview = { default = 'bat', layout = 'horizontal' } },
     manpages = { previewer = 'man_native' },
     helptags = { previewer = 'help_native' },

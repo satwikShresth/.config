@@ -87,19 +87,6 @@ return {
       end
 
       local servers = {
-        ts_ls = {
-          init_options = {
-            preferences = {
-              disableSuggestions = true,
-            },
-          },
-          commands = {
-            OrganizeImports = {
-              organize_imports,
-              description = 'Organize Imports',
-            },
-          },
-        },
         denols = {
           settings = {
             deno = {
