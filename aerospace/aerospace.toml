@@ -1,0 +1,211 @@
+# Place a copy of this config to ~/.aerospace.toml
+# After that, you can edit ~/.aerospace.toml to your liking
+
+# It's not necessary to copy all keys to your config.
+# If the key is missing in your config, "default-config.toml" will serve as a fallback
+
+# You can use it to add commands that run after login to macOS user session.
+# 'start-at-login' needs to be 'true' for 'after-login-command' to work
+# Available commands: https://nikitabobko.github.io/AeroSpace/commands
+after-login-command = []
+
+# You can use it to add commands that run after AeroSpace startup.
+# 'after-startup-command' is run after 'after-login-command'
+# Available commands : https://nikitabobko.github.io/AeroSpace/commands
+after-startup-command = [
+    # JankyBorders has a built-in detection of already running process,
+    # so it won't be run twice on AeroSpace restart
+    'exec-and-forget sketchybar',
+    'exec-and-forget borders',
+]
+
+# Notify Sketchybar about workspace change
+exec-on-workspace-change = ['/bin/bash', '-c',
+    'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
+]
+# Start AeroSpace at login
+start-at-login = true
+
+# Normalizations. See: https://nikitabobko.github.io/AeroSpace/guide#normalization
+enable-normalization-flatten-containers = false
+enable-normalization-opposite-orientation-for-nested-containers = true
+
+# See: https://nikitabobko.github.io/AeroSpace/guide#layouts
+# The 'accordion-padding' specifies the size of accordion padding
+# You can set 0 to disable the padding feature
+accordion-padding = 0
+
+# Possible values: tiles|accordion
+default-root-container-layout = 'tiles'
+
+# Possible values: horizontal|vertical|auto
+# 'auto' means: wide monitor (anything wider than high) gets horizontal orientation,
+#               tall monitor (anything higher than wide) gets vertical orientation
+default-root-container-orientation = 'horizontal'
+
+# Possible values: (qwerty|dvorak)
+# See https://nikitabobko.github.io/AeroSpace/guide#key-mapping
+key-mapping.preset = 'qwerty'
+
+# Mouse follows focus when focused monitor changes
+# Drop it from your config, if you don't like this behavior
+# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
+# See https://nikitabobko.github.io/AeroSpace/commands#move-mouse
+on-focused-monitor-changed = ['move-mouse monitor-lazy-center']
+# on-focus-changed = ['move-mouse window-lazy-center'] # Mouse lazily follows any focus (window or workspace)
+
+# Gaps between windows (inner-*) and between monitor edges (outer-*).
+# Possible values:
+# - Constant:     gaps.outer.top = 8
+# - Per monitor:  gaps.outer.top = [{ monitor.main = 16 }, { monitor."some-pattern" = 32 }, 24]
+#                 In this example, 24 is a default value when there is no match.
+#                 Monitor pattern is the same as for 'workspace-to-monitor-force-assignment'.
+#                 See: https://nikitabobko.github.io/AeroSpace/guide#assign-workspaces-to-monitors
+[gaps]
+inner.horizontal = 5
+inner.vertical =   5
+outer.left =       5
+outer.bottom =     5
+outer.top =        40
+outer.right =      5
+
+# 'main' binding mode declaration
+# See: https://nikitabobko.github.io/AeroSpace/guide#binding-modes
+# 'main' binding mode must be always presented
+[mode.main.binding]
+ctrl-space = ['mode move', 'exec-and-forget sketchybar --bar color=0x55ed8796 --set aerospace_mode icon="MOVE"']
+# All possible keys:
+# - Letters.        a, b, c, ..., z
+# - Numbers.        0, 1, 2, ..., 9
+# - Keypad numbers. keypad0, keypad1, keypad2, ..., keypad9
+# - F-keys.         f1, f2, ..., f20
+# - Special keys.   minus, equal, period, comma, slash, backslash, quote, semicolon, backtick,
+#                   leftSquareBracket, rightSquareBracket, space, enter, esc, backspace, tab
+# - Keypad special. keypadClear, keypadDecimalMark, keypadDivide, keypadEnter, keypadEqual,
+#                   keypadMinus, keypadMultiply, keypadPlus
+# - Arrows.         left, down, up, right
+
+# All possible modifiers: cmd, alt, ctrl, shift
+
+# All possible commands: https://nikitabobko.github.io/AeroSpace/commands
+
+# You can uncomment this line to open up terminal with alt + enter shortcut
+# See: https://nikitabobko.github.io/AeroSpace/commands#exec-and-forget
+# alt-enter = 'exec-and-forget open -n /System/Applications/Utilities/Terminal.app'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#layout
+[mode.move.binding]
+ctrl-space = ['mode move', 'exec-and-forget sketchybar --bar color=0x55ed8796 --set aerospace_mode icon="MOVE"']
+esc = ['mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2f --set aerospace_mode icon=""']
+shift-backtick = ['reload-config', 'mode main']
+backtick = [
+  'reload-config',
+  'exec-and-forget borders',
+  'exec-and-forget sketchybar --reload',
+  'mode main'
+]
+
+slash = 'layout tiles horizontal vertical'
+comma = 'layout accordion horizontal vertical'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#focus
+h = 'focus left'
+l = 'focus right'
+k = 'focus up'
+j= 'focus down'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#move
+shift-h = 'move left'
+shift-l = 'move right'
+shift-k = 'move up'
+shift-j = 'move down'
+
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#resize
+minus = 'resize smart -50'
+equal = 'resize smart +50'
+p = 'resize width 2560'
+b = 'balance-sizes'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#workspace
+z = ['workspace Z', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+x = ['workspace X', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+c = ['workspace C', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+v = ['workspace V', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
+shift-z = ['move-node-to-workspace Z', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+shift-x = ['move-node-to-workspace X', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+shift-c = ['move-node-to-workspace C', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+shift-v = ['move-node-to-workspace V', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+
+
+n = ['workspace N', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+m = ['workspace M', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-node-to-workspace
+shift-n = ['move-node-to-workspace N', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+shift-m = ['move-node-to-workspace M', 'mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#workspace-back-and-forth
+tab = 'workspace-back-and-forth'
+# See: https://nikitabobko.github.io/AeroSpace/commands#move-workspace-to-monitor
+shift-tab = 'move-workspace-to-monitor --wrap-around next'
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#mode
+shift-r = ['flatten-workspace-tree', 'mode move'] # reset layout
+f = ['fullscreen']
+shift-f = ['layout floating tiling', 'mode move'] # Toggle between floating and tiling layout
+
+# See: https://nikitabobko.github.io/AeroSpace/commands#mode
+semicolon =['mode spacial', 'exec-and-forget sketchybar --bar color=0x55ed8796 --set aerospace_mode icon="SPACIAL"']
+
+[mode.spacial.binding]
+ctrl-cmd-space = ['mode spacial', 'exec-and-forget sketchybar --bar color=0x55ed8796 --set aerospace_mode icon="SPACIAL"']
+space = ['mode main', 'exec-and-forget sketchybar --bar color=0xff1e1e2e --set aerospace_mode icon=""']
+esc = ['mode move', 'exec-and-forget sketchybar --bar color=0x55ed8796 --set aerospace_mode icon="MOVE"']
+
+h = ['join-with left', 'mode move']
+j = ['join-with down', 'mode move']
+k = ['join-with up', 'mode move']
+l = ['join-with right', 'mode move']
+
+[workspace-to-monitor-force-assignment]
+
+Z = 'main'
+
+X = 'main'
+
+C = 'main'
+
+V = 'main'
+
+N = ['secondary', 'main']
+
+M = ['secondary', 'main']
+
+
+# 'Callbacks'
+
+[[on-window-detected]]
+if.app-id = 'net.whatsapp.Whatsapp'
+run = ['move-node-to-workspace M']  # The callback itself
+
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+if.window-title-regex-substring = 'Zimbra'
+run = ['move-node-to-workspace N']  # The callback itself
+
+[[on-window-detected]]
+if.app-id = 'company.thebrowser.Browser'
+if.window-title-regex-substring = 'Proxmox Environment'
+run = ['move-node-to-workspace N']  # The callback itself
+
+[[on-window-detected]]
+if.app-id = 'tv.parsec.www'
+run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
+
+[[on-window-detected]]
+if.app-id = 'com.apple.finder'
+run = ['layout floating']  # The callback itself
