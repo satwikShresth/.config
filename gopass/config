@@ -1,0 +1,4 @@
+[mounts]
+	path = /Users/satwikshresth/.local/share/gopass/stores/root
+[recipients]
+	hash = 7813c2b8ca6e78219566e894cf6fc3c1743a20db2c709ebc5ffd102a113b5cbf
