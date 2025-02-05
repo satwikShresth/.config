@@ -74,6 +74,7 @@ outer.right =      5
 # 'main' binding mode must be always presented
 [mode.main.binding]
 ctrl-space = ['mode move', 'exec-and-forget sketchybar --bar color=0x55ed8796 --set aerospace_mode icon="MOVE"']
+
 # All possible keys:
 # - Letters.        a, b, c, ..., z
 # - Numbers.        0, 1, 2, ..., 9
@@ -203,9 +204,11 @@ if.window-title-regex-substring = 'Proxmox Environment'
 run = ['move-node-to-workspace N']  # The callback itself
 
 [[on-window-detected]]
-if.app-id = 'tv.parsec.www'
-run = ['layout floating', 'move-node-to-workspace S']  # The callback itself
-
-[[on-window-detected]]
 if.app-id = 'com.apple.finder'
 run = ['layout floating']  # The callback itself
+
+[[on-window-detected]]
+if.app-id="com.mitchellh.ghostty"
+run= [
+  "layout tiling",
+]
