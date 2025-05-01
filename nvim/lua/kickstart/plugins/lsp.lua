@@ -80,6 +80,47 @@ return {
           },
         },
       },
+      ts_ls = {
+        root_dir = require('lspconfig').util.root_pattern { 'package.json', 'tsconfig.json' },
+        single_file_support = false,
+        settings = {
+          separate_diagnostic_server = true,
+          publish_diagnostic_on = 'insert_leave',
+          tsserver_max_memory = 'auto',
+          -- Feature settings
+          expose_as_code_action = 'all',
+          complete_function_calls = false,
+          include_completions_with_insert_text = true,
+          code_lens = 'implementations_only',
+        },
+      },
+      eslint = {
+        codeAction = {
+          disableRuleComment = {
+            enable = true,
+            location = 'separateLine',
+          },
+          showDocumentation = {
+            enable = true,
+          },
+        },
+        codeActionOnSave = {
+          enable = false,
+          mode = 'all',
+        },
+        format = true,
+        nodePath = '',
+        onIgnoredFiles = 'off',
+        packageManager = 'npm',
+        quiet = false,
+        rulesCustomizations = {},
+        run = 'onType',
+        useESLintClass = false,
+        validate = 'on',
+        workingDirectory = {
+          mode = 'location',
+        },
+      },
       denols = {
         settings = {
           deno = {
@@ -119,7 +160,8 @@ return {
             },
           },
         },
-        root_dir = require('lspconfig').util.root_pattern('deno.json', 'deno.jsonc'),
+        root_dir = require('lspconfig').util.root_pattern { 'deno.json', 'deno.jsonc' },
+        single_file_support = false,
       },
       pylsp = {
         plugins = {
@@ -144,7 +186,6 @@ return {
           rope_completion = { enabled = true },
         },
       },
-
       lua_ls = {
 
         settings = {
@@ -163,6 +204,7 @@ return {
     vim.list_extend(ensure_installed, {
       'stylua',
       'clangd',
+      'just-lsp',
     })
     require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 

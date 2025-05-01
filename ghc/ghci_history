@@ -1,0 +1,38 @@
+putBoard initial
+putBoard initial
+:load Nim.hs 
+putRow 5 5
+putRow 1 10
+putRow 1 0
+:load Nim.hs 
+putRow 1 0
+putRow 1 10
+putRow 1 10
+:load Nim.hs 
+putRow 1 10
+putRow 1 10
+putRow 1 10
+putRow 1 1
+:load Nim.hs 
+hangman
+hangmam
+:load Hangman.hs 
+:load Nim.hs 
+:load nim
+randomColor100
+:reload
+randomColor100
+:reload
+randomColorSeeds 100
+randomColor100
+:reload
+:load Art.hs
+:reload
+:reload
+randomColor100
+randomColor100
+:reload
+writeTestFiles
+eval 
+eval gradident
+gradient 

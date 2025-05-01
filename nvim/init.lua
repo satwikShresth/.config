@@ -27,6 +27,8 @@ spec 'kickstart.plugins.kickstart'
 spec 'kickstart.plugins.treesitter'
 spec 'kickstart.plugins.colorscheme'
 spec 'kickstart.plugins.breadcrumbs'
+spec 'kickstart.plugins.typescript'
+spec 'kickstart.plugins.just'
 
 require 'kickstart.lazy'
 -- require('obsidian').get_client()
