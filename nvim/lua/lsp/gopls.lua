@@ -1,8 +1,9 @@
+local blink = require("blink.cmp")
 return {
-	cmd = { "gopls" },                                   -- Command to start the language server
+	cmd = { "gopls" }, -- Command to start the language server
 	filetypes = { "go", "gomod", "gowork", "gotmpl", "gosum" }, -- File types that this server will handle
-	root_markers = { "go.mod", "go.work", ".git" },      -- Markers to identify the root of the project
-	settings = {                                         -- Settings for the language server
+	root_markers = { "go.mod", "go.work", ".git" }, -- Markers to identify the root of the project
+	settings = { -- Settings for the language server
 		gopls = {
 			gofumpt = true,
 			codelenses = {
@@ -94,4 +95,10 @@ return {
 			semanticTokens = true,
 		},
 	},
+	capabilities = vim.tbl_deep_extend(
+		"force",
+		{},
+		vim.lsp.protocol.make_client_capabilities(),
+		blink.get_lsp_capabilities()
+	),
 }

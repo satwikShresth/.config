@@ -1,5 +1,8 @@
+local blink = require("blink.cmp")
+local util = require("lspconfig.util")
+
 return {
-	root_dir = require("lspconfig").util.root_pattern({ "deno.json", "deno.jsonc" }),
+	root_dir = util.root_pattern("deno.json", "deno.jsonc"),
 	single_file_support = false,
 	settings = {},
 	filetypes = {
@@ -10,5 +13,10 @@ return {
 		"typescriptreact",
 		"typescript.tsx",
 	},
-	root_markers = { "deno.json", "deno.jsonc", "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+	capabilities = vim.tbl_deep_extend(
+		"force",
+		{},
+		vim.lsp.protocol.make_client_capabilities(),
+		blink.get_lsp_capabilities()
+	),
 }

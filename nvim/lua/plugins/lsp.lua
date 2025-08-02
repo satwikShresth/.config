@@ -1,9 +1,6 @@
 return {
 	"neovim/nvim-lspconfig",
 	dependencies = {
-		{ "mason-org/mason.nvim", opts = {} },
-		"mason-org/mason-lspconfig.nvim",
-		"WhoIsSethDaniel/mason-tool-installer.nvim",
 		{
 			"j-hui/fidget.nvim",
 			opts = {
@@ -25,12 +22,7 @@ return {
 					vim.keymap.set(mode, keys, func, { buffer = event.buf, desc = "LSP: " .. desc })
 				end
 
-				-- map('grn', vim.lsp.buf.rename, '[R]e[n]ame')
-				-- map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
-				-- map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
-				-- map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
-				-- map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
-
+				-- Basic LSP mappings
 				map("K", vim.lsp.buf.hover, "Hover")
 				map("gl", vim.diagnostic.open_float, "Float")
 				map("gr", vim.lsp.buf.references, "References")
@@ -38,9 +30,26 @@ return {
 				map("gd", vim.lsp.buf.definition, "[G]oto [d]efinition")
 				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 				map("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction", { "n", "x" })
-				map("gO", require("fzf-lua").lsp_document_symbols, "Open Document Symbols")
-				map("gW", require("fzf-lua").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
-				map("grt", require("fzf-lua").lsp_type_definitions, "[G]oto [T]ype Definition")
+
+				-- Safe fzf-lua mappings with fallback
+				local fzf_ok, fzf_lua = pcall(require, "fzf-lua")
+				if fzf_ok and fzf_lua.lsp_document_symbols then
+					map("gO", fzf_lua.lsp_document_symbols, "Open Document Symbols")
+				else
+					map("gO", vim.lsp.buf.document_symbol, "Open Document Symbols")
+				end
+
+				if fzf_ok and fzf_lua.lsp_dynamic_workspace_symbols then
+					map("gW", fzf_lua.lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
+				else
+					map("gW", vim.lsp.buf.workspace_symbol, "Open Workspace Symbols")
+				end
+
+				if fzf_ok and fzf_lua.lsp_type_definitions then
+					map("grt", fzf_lua.lsp_type_definitions, "[G]oto [T]ype Definition")
+				else
+					map("grt", vim.lsp.buf.type_definition, "[G]oto [T]ype Definition")
+				end
 
 				---@param client vim.lsp.Client
 				---@param method vim.lsp.protocol.Method
@@ -97,7 +106,6 @@ return {
 		})
 
 		-- Diagnostic Config
-		-- See :help vim.diagnostic.Opts
 		vim.diagnostic.config({
 			severity_sort = true,
 			float = { border = "rounded", source = "if_many" },
@@ -111,49 +119,47 @@ return {
 				},
 			} or {},
 			virtual_text = false,
-			-- virtual_text = {
-			--   source = 'if_many',
-			--   spacing = 2,
-			--   format = function(diagnostic)
-			--     local diagnostic_message = {
-			--       [vim.diagnostic.severity.ERROR] = diagnostic.message,
-			--       [vim.diagnostic.severity.WARN] = diagnostic.message,
-			--       [vim.diagnostic.severity.INFO] = diagnostic.message,
-			--       [vim.diagnostic.severity.HINT] = diagnostic.message,
-			--     }
-			--     return diagnostic_message[diagnostic.severity]
-			--   end,
-			-- },
 		})
 
+		local lspconfig = require("lspconfig")
 		local capabilities = require("blink.cmp").get_lsp_capabilities()
-		local servers = {
-			-- clangd = {},
-			-- gopls = {},
-			-- pyright = {},
-			-- rust_analyzer = {},
-			ts_ls = require("lsp.ts_ls"),
-			pylsp = require("lsp.pylsp"),
-			lua_ls = require("lsp.lua_ls"),
-		}
 
-		local ensure_installed = vim.tbl_keys(servers or {})
-		vim.list_extend(ensure_installed, { "stylua" })
-		require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+		-- Language Server Configurations
 
-		require("mason-lspconfig").setup({
-			ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-			automatic_installation = false,
-			handlers = {
-				function(server_name)
-					local server = servers[server_name] or {}
-					-- This handles overriding only values explicitly passed
-					-- by the server configuration above. Useful when disabling
-					-- certain features of an LSP (for example, turning off formatting for ts_ls)
-					server.capabilities = vim.tbl_deep_extend("force", {}, capabilities, server.capabilities or {})
-					require("lspconfig")[server_name].setup(server)
-				end,
+		-- Lua Language Server
+		lspconfig.lua_ls.setup({
+			capabilities = capabilities,
+			settings = {
+				Lua = {
+					runtime = { version = "LuaJIT" },
+					workspace = {
+						checkThirdParty = false,
+						library = { vim.env.VIMRUNTIME },
+					},
+					diagnostics = { globals = { "vim" } },
+					telemetry = { enable = false },
+				},
 			},
 		})
+
+		-- Python Language Server
+		lspconfig.pylsp.setup({
+			capabilities = capabilities,
+			settings = {
+				pylsp = {
+					plugins = {
+						pycodestyle = { maxLineLength = 88 },
+						black = { enabled = true },
+						isort = { enabled = true },
+					},
+				},
+			},
+		})
+
+		-- Deno Language Server
+		lspconfig.denols.setup(require("lsp.denols"))
+
+		-- TypeScript Language Server
+		lspconfig.ts_ls.setup(require("lsp.ts_ls"))
 	end,
 }
